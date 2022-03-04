@@ -11,7 +11,7 @@ sys.path.append(egg_path)
 
 from baby_cry_detection.rpi_methods import Reader
 from baby_cry_detection.rpi_methods.baby_cry_predictor import BabyCryPredictor
-from baby_cry_detection.rpi_methods.feature_engineer import FeatureEngineer
+from baby_cry_detection.rpi_methods.feature_extractor import FeatureExtractor
 from baby_cry_detection.rpi_methods.majority_voter import MajorityVoter
 
 
@@ -31,38 +31,19 @@ def main():
     load_path_model = os.path.normpath(args.load_path_model)
     save_path = os.path.normpath(args.save_path)
 
-    ####################################################################################################################
-    # READ RAW SIGNAL
-    ####################################################################################################################
-
     # Read signal
     file_name = 'signal_9s.wav'       # only one file in the folder
     file_reader = Reader(os.path.join(load_path_data, file_name))
     play_list = file_reader.read_audio_file()
 
-    ####################################################################################################################
-    # iteration
-    ####################################################################################################################
-
-    # iterate on play_list for feature engineering and prediction
-
-    ####################################################################################################################
-    # FEATURE ENGINEERING
-    ####################################################################################################################
-
     # Feature extraction
-    engineer = FeatureEngineer()
-
+    feature_extractor = FeatureExtractor()
     play_list_processed = list()
-
     for signal in play_list:
-        tmp = engineer.feature_engineer(signal)
+        tmp = feature_extractor.extract_features(signal)
         play_list_processed.append(tmp)
 
-    ####################################################################################################################
-    # MAKE PREDICTION
-    ####################################################################################################################
-
+    # Open Model
     # https://stackoverflow.com/questions/41146759/check-sklearn-version-before-loading-model-using-joblib
     with warnings.catch_warnings():
       warnings.simplefilter("ignore", category=UserWarning)
@@ -70,24 +51,16 @@ def main():
       with open((os.path.join(load_path_model, 'model.pkl')), 'rb') as fp:
           model = pickle.load(fp)
 
+    # Make Predictions
     predictor = BabyCryPredictor(model)
-
     predictions = list()
-
     for signal in play_list_processed:
         tmp = predictor.classify(signal)
         predictions.append(tmp)
 
-    ####################################################################################################################
-    # MAJORITY VOTE
-    ####################################################################################################################
-
+    # Majority Vote
     majority_voter = MajorityVoter(predictions)
     majority_vote = majority_voter.vote()
-
-    ####################################################################################################################
-    # SAVE
-    ####################################################################################################################
 
     # Save prediction result
     with open(os.path.join(save_path, 'prediction.txt'), 'wb') as text_file:

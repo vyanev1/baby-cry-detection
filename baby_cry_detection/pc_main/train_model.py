@@ -8,7 +8,7 @@ import pickle
 
 import numpy as np
 
-from baby_cry_detection.pc_methods.train_classifier import TrainClassifier
+from baby_cry_detection.pc_methods.audio_classifier import AudioClassifier
 
 
 def main():
@@ -40,8 +40,8 @@ def main():
     X = np.load(os.path.join(load_path, 'dataset.npy'))
     y = np.load(os.path.join(load_path, 'labels.npy'))
 
-    train_classifier = TrainClassifier(X, y)
-    performance, parameters, best_estimator = train_classifier.train()
+    audio_classifier = AudioClassifier(X, y)
+    performance, parameters, best_estimator = audio_classifier.train()
 
     # SAVE
 

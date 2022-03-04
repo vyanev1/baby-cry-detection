@@ -8,7 +8,7 @@ import timeit
 import warnings
 
 from baby_cry_detection.rpi_methods import Reader
-from baby_cry_detection.rpi_methods.feature_engineer import FeatureEngineer
+from baby_cry_detection.rpi_methods.feature_extractor import FeatureExtractor
 from baby_cry_detection.rpi_methods.majority_voter import MajorityVoter
 
 from baby_cry_detection.rpi_methods.baby_cry_predictor import BabyCryPredictor
@@ -60,12 +60,12 @@ def main():
     start = timeit.default_timer()
 
     # Feature extraction
-    engineer = FeatureEngineer()
+    engineer = FeatureExtractor()
 
     play_list_processed = list()
 
     for signal in play_list:
-        tmp = engineer.feature_engineer(signal)
+        tmp = engineer.extract_features(signal)
         play_list_processed.append(tmp)
 
     stop = timeit.default_timer()

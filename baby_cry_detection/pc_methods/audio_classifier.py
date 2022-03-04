@@ -11,11 +11,11 @@ import timeit
 
 
 __all__ = [
-    'TrainClassifier'
+    'AudioClassifier'
 ]
 
 
-class TrainClassifier:
+class AudioClassifier:
     """
     Class to train a classifier of audio signals
     """
@@ -65,16 +65,16 @@ class TrainClassifier:
         stop = timeit.default_timer()
         logging.info('Time taken: {0}'.format(stop - start))
 
-        y_pred = model.predict(X_test)
+        y_predicted = model.predict(X_test)
 
-        perf = {
-            'accuracy': accuracy_score(y_test, y_pred),
-            'recall': recall_score(y_test, y_pred, average='macro'),
-            'precision': precision_score(y_test, y_pred, average='macro'),
-            'f1': f1_score(y_test, y_pred, average='macro'),
+        performance = {
+            'accuracy': accuracy_score(y_test, y_predicted),
+            'recall': recall_score(y_test, y_predicted, average='macro'),
+            'precision': precision_score(y_test, y_predicted, average='macro'),
+            'f1': f1_score(y_test, y_predicted, average='macro'),
             # 'summary': classification_report(y_test, y_pred)
         }
 
-        logging.info(perf)
+        logging.info(performance)
 
-        return perf, model.best_params_, model.best_estimator_
+        return performance, model.best_params_, model.best_estimator_

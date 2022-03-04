@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-import logging
-import timeit
-from librosa.feature import zero_crossing_rate, mfcc, spectral_centroid, spectral_rolloff, spectral_bandwidth,\
-    rms #rms in librpsa 0.7.0, rmse in previous version
+from librosa.feature import zero_crossing_rate, mfcc, spectral_centroid, spectral_rolloff, spectral_bandwidth, rms
+
 
 __all__ = [
     'FeatureExtractor'
@@ -23,18 +21,14 @@ class FeatureExtractor:
     RATE = 44100   # All recordings in ESC are 44.1 kHz
     FRAME = 512    # Frame size in samples
 
-    def __init__(self, label=None):
-        # Necessary to re-use code for training and prediction
-        if label is None:
-            self.label = ''
-        else:
-            self.label = label
+    def __init__(self):
+        pass
 
     def extract_features(self, audio_data):
         """
         Extract features using librosa.feature.
 
-        Each signal is cut into frames, features are computed for each frame and averaged [mean].
+        Each signal is cut into frames, features are computed for each frame and averaged [median].
         The numpy array is transformed into a data frame with named columns.
 
         :param audio_data: the input signal samples with frequency 44.1 kHz
@@ -48,7 +42,7 @@ class FeatureExtractor:
         spectral_rolloff_feature = self.compute_librosa_features(audio_data=audio_data, feature_name=self.SPECTRAL_ROLLOFF)
         spectral_bandwidth_feature = self.compute_librosa_features(audio_data=audio_data, feature_name=self.SPECTRAL_BANDWIDTH)
 
-        concatenated_features = np.concatenate((zcr_feature,
+        concat_feature = np.concatenate((zcr_feature,
                                       rmse_feature,
                                       mfcc_feature,
                                       spectral_centroid_feature,
@@ -56,29 +50,23 @@ class FeatureExtractor:
                                       spectral_bandwidth_feature
                                       ), axis=0)
 
-        logging.info('Averaging...')
-        start = timeit.default_timer()
-
-        mean_feature = np.mean(concatenated_features, axis=1, keepdims=True).transpose()
-
-        stop = timeit.default_timer()
-        logging.info('Time taken: {0}'.format(stop - start))
-
-        return mean_feature, self.label
+        return np.mean(concat_feature, axis=1, keepdims=True).transpose()
 
     def compute_librosa_features(self, audio_data, feature_name):
         """
         Compute feature using librosa methods
 
         :param audio_data: signal
-        :param feature_name: feature to compute 
-            possible values: 'zero_crossing_rate', 'rmse', 'mfcc', 'spectral_centroid', 'spectral_rolloff', 'spectral_bandwidth'
+        :param feat_name: feature to compute
         :return: np array
         """
-        # # http://stackoverflow.com/questions/41896123/librosa-feature-tonnetz-ends-up-in-typeerror
-        # chroma_cens_feat = chroma_cens(y=audio_data, sr=self.RATE, hop_length=self.FRAME)
 
-        logging.info('Computing {}...'.format(feature_name))
+        ## /!\ rmse in librosa 0.4.3 and 0.5.0
+        ## /!\ rms in librosa 0.7.0
+
+        ## /!\ librosa 0.5.0
+        # if rmse_feat.shape == (1, 427):
+        #     rmse_feat = np.concatenate((rmse_feat, np.zeros((1, 4))), axis=1)
 
         if feature_name == self.ZERO_CROSSING_RATE:
             return zero_crossing_rate(y=audio_data, hop_length=self.FRAME)
@@ -92,3 +80,4 @@ class FeatureExtractor:
             return spectral_rolloff(y=audio_data, sr=self.RATE, hop_length=self.FRAME, roll_percent=0.90)
         elif feature_name == self.SPECTRAL_BANDWIDTH:
             return spectral_bandwidth(y=audio_data, sr=self.RATE, hop_length=self.FRAME)
+

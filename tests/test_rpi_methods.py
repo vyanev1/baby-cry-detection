@@ -3,7 +3,7 @@ import numpy as np
 
 from tests import TestBabyCry
 from baby_cry_detection.rpi_methods import Reader
-from baby_cry_detection.rpi_methods.feature_engineer import FeatureEngineer
+from baby_cry_detection.rpi_methods.feature_extractor import FeatureExtractor
 from baby_cry_detection.rpi_methods.baby_cry_predictor import BabyCryPredictor
 from baby_cry_detection.rpi_methods.majority_voter import MajorityVoter
 
@@ -26,34 +26,34 @@ class RpiMethodsTest(TestBabyCry):
 
     def test_feature_engineer(self):
 
-        feature_engineer = FeatureEngineer()
+        feature_engineer = FeatureExtractor()
 
-        features = feature_engineer.feature_engineer(self.rpi_sample)
+        features = feature_engineer.extract_features(self.rpi_sample)
 
         self.assertEqual(features.shape, (1, 18))
 
     def test_compute_librosa_features(self):
 
-        feature_engineer = FeatureEngineer()
+        feature_engineer = FeatureExtractor()
 
         expected_computed_points = int(round(feature_engineer.RATE*5/feature_engineer.FRAME, 0))
 
-        self.assertEqual(feature_engineer.compute_librosa_features(audio_data=self.pc_sample, feat_name='zero_crossing_rate').shape,
+        self.assertEqual(feature_engineer.compute_librosa_features(audio_data=self.pc_sample, feature_name='zero_crossing_rate').shape,
                          (1, expected_computed_points))
 
-        self.assertEqual(feature_engineer.compute_librosa_features(audio_data=self.pc_sample, feat_name='rmse').shape,
+        self.assertEqual(feature_engineer.compute_librosa_features(audio_data=self.pc_sample, feature_name='rmse').shape,
                          (1, expected_computed_points))
 
-        self.assertEqual(feature_engineer.compute_librosa_features(audio_data=self.pc_sample, feat_name='mfcc').shape,
+        self.assertEqual(feature_engineer.compute_librosa_features(audio_data=self.pc_sample, feature_name='mfcc').shape,
                          (13, expected_computed_points))
 
-        self.assertEqual(feature_engineer.compute_librosa_features(audio_data=self.pc_sample, feat_name='spectral_centroid').shape,
+        self.assertEqual(feature_engineer.compute_librosa_features(audio_data=self.pc_sample, feature_name='spectral_centroid').shape,
                          (1, expected_computed_points))
 
-        self.assertEqual(feature_engineer.compute_librosa_features(audio_data=self.pc_sample, feat_name='spectral_rolloff').shape,
+        self.assertEqual(feature_engineer.compute_librosa_features(audio_data=self.pc_sample, feature_name='spectral_rolloff').shape,
                          (1, expected_computed_points))
 
-        self.assertEqual(feature_engineer.compute_librosa_features(audio_data=self.pc_sample, feat_name='spectral_bandwidth').shape,
+        self.assertEqual(feature_engineer.compute_librosa_features(audio_data=self.pc_sample, feature_name='spectral_bandwidth').shape,
                          (1, expected_computed_points))
 
     def test_is_baby_cry(self):
