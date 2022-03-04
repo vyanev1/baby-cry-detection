@@ -8,7 +8,7 @@ import timeit
 import numpy as np
 
 from baby_cry_detection.pc_methods import Reader
-from baby_cry_detection.pc_methods.feature_engineer import FeatureEngineer
+from baby_cry_detection.pc_methods.feature_extractor import FeatureExtractor
 
 
 def main():
@@ -52,7 +52,7 @@ def main():
     for directory in directory_list:
 
         # Instantiate FeatureEngineer
-        feature_engineer = FeatureEngineer(label=directory)
+        feature_engineer = FeatureExtractor(label=directory)
 
         file_list = os.listdir(os.path.join(load_path, directory))
 
@@ -60,7 +60,7 @@ def main():
         for audio_file in file_list:
             file_reader = Reader(os.path.join(load_path, directory, audio_file))
             data, sample_rate = file_reader.read_audio_file()
-            avg_features, label = feature_engineer.feature_engineer(audio_data=data)
+            avg_features, label = feature_engineer.extract_features(audio_data=data)
 
             X = np.concatenate((X, avg_features), axis=0)
             y.append(label)
