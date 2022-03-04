@@ -94,3 +94,6 @@ ENV/
 
 # Other files proper to this project
 expand_train_set.py
+
+# VSCode
+.vscode

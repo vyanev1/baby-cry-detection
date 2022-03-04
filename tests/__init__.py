@@ -1,4 +1,4 @@
-from unittest2 import TestCase
+from unittest import TestCase
 import librosa
 import os
 
@@ -11,7 +11,7 @@ class TestBabyCry(TestCase):
     @classmethod
     def setUpClass(cls):
 
-        print "Set up test class"
+        print("Set up test class")
 
         external_directory_path = '{}/../../external_input/'.format(os.path.dirname(os.path.abspath(__file__)))
         signal_name = 'signal_9s.ogg'
@@ -26,4 +26,4 @@ class TestBabyCry(TestCase):
     @classmethod
     def tearDownClass(cls):
 
-        print "\nTear down test class"
+        print("\nTear down test class")
