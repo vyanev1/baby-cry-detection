@@ -95,5 +95,10 @@ ENV/
 # Other files proper to this project
 expand_train_set.py
 
-# VSCode
+# VSCode & Visual Studio
 .vscode
+.vs
+
+# Output datasets
+*.npy
+performance.json

@@ -14,9 +14,9 @@ from baby_cry_detection.pc_methods.audio_classifier import AudioClassifier
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--load_path',
-                        default='{}/../../../output/dataset/'.format(os.path.dirname(os.path.abspath(__file__))))
+                        default='{}/../../output/dataset/'.format(os.path.dirname(os.path.abspath(__file__))))
     parser.add_argument('--save_path',
-                        default='{}/../../../output/model/'.format(os.path.dirname(os.path.abspath(__file__))))
+                        default='{}/../../output/model/'.format(os.path.dirname(os.path.abspath(__file__))))
     parser.add_argument('--log_path',
                         default='{}/../../'.format(os.path.dirname(os.path.abspath(__file__))))
 

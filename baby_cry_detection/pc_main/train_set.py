@@ -16,7 +16,7 @@ def main():
     parser.add_argument('--load_path',
                         default='{}/../../data'.format(os.path.dirname(os.path.abspath(__file__))))
     parser.add_argument('--save_path',
-                        default='{}/../../../output/dataset/'.format(os.path.dirname(os.path.abspath(__file__))))
+                        default='{}/../../output/dataset/'.format(os.path.dirname(os.path.abspath(__file__))))
     parser.add_argument('--log_path',
                         default='{}/../../'.format(os.path.dirname(os.path.abspath(__file__))))
 
