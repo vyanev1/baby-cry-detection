@@ -3,11 +3,11 @@ import logging
 import timeit
 
 __all__ = [
-    'Reader'
+    'AudioReader'
 ]
 
 
-class Reader:
+class AudioReader:
     """
     Read input audio file for training set
     file_name: 'path/to/file/filename.ogg'

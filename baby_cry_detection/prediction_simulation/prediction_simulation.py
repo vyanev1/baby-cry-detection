@@ -11,7 +11,7 @@ from baby_cry_detection.rpi_methods import Reader
 from baby_cry_detection.rpi_methods.feature_extractor import FeatureExtractor
 from baby_cry_detection.rpi_methods.majority_voter import MajorityVoter
 
-from baby_cry_detection.rpi_methods.baby_cry_predictor import BabyCryPredictor
+from baby_cry_detection.rpi_methods.baby_cry_predictor import CryingBabyPredictor
 
 
 def main():
@@ -83,7 +83,7 @@ def main():
       with open((os.path.join(load_path_model, 'model.pkl')), 'rb') as fp:
           model = pickle.load(fp)
 
-    predictor = BabyCryPredictor(model)
+    predictor = CryingBabyPredictor(model)
 
     predictions = list()
 

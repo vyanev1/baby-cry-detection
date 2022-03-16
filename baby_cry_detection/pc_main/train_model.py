@@ -33,8 +33,7 @@ def main():
                         filemode='w',
                         level=logging.DEBUG)
 
-    # TRAIN MODEL
-
+    # Train model
     logging.info('Calling TrainClassifier')
 
     X = np.load(os.path.join(load_path, 'dataset.npy'))
@@ -43,8 +42,7 @@ def main():
     audio_classifier = AudioClassifier(X, y)
     performance, parameters, best_estimator = audio_classifier.train()
 
-    # SAVE
-
+    # Save model performance
     logging.info('Saving model...')
 
     # Save performances

@@ -4,7 +4,7 @@ import numpy as np
 from tests import TestBabyCry
 from baby_cry_detection.rpi_methods import Reader
 from baby_cry_detection.rpi_methods.feature_extractor import FeatureExtractor
-from baby_cry_detection.rpi_methods.baby_cry_predictor import BabyCryPredictor
+from baby_cry_detection.rpi_methods.baby_cry_predictor import CryingBabyPredictor
 from baby_cry_detection.rpi_methods.majority_voter import MajorityVoter
 
 
@@ -60,9 +60,9 @@ class RpiMethodsTest(TestBabyCry):
 
         for category in self.categories:
             if category == '301 - Crying baby':
-                self.assertEqual(BabyCryPredictor._is_baby_cry(category), 1)
+                self.assertEqual(CryingBabyPredictor._is_baby_cry(category), 1)
             else:
-                self.assertEqual(BabyCryPredictor._is_baby_cry(category), 0)
+                self.assertEqual(CryingBabyPredictor._is_baby_cry(category), 0)
 
     def test_vote(self):
 

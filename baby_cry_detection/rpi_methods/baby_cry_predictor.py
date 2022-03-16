@@ -4,11 +4,11 @@ import re
 
 
 __all__ = [
-    'BabyCryPredictor'
+    'CryingBabyPredictor'
 ]
 
 
-class BabyCryPredictor:
+class CryingBabyPredictor:
     """
     Class to classify a new audio signal and determine if it's a baby cry
     """

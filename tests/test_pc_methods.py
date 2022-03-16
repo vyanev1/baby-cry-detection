@@ -1,7 +1,7 @@
 from __future__ import division
 
 from tests import TestBabyCry
-from baby_cry_detection.pc_methods import Reader
+from baby_cry_detection.pc_methods import AudioReader
 from baby_cry_detection.pc_methods.feature_extractor import FeatureExtractor
 
 
@@ -12,7 +12,7 @@ class PcMethodsTest(TestBabyCry):
 
     def test_read_audio_file(self):
 
-        reader = Reader(file_name=self.file_name)
+        reader = AudioReader(file_name=self.file_name)
 
         track, sr = reader.read_audio_file()
 

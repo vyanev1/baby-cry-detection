@@ -7,7 +7,7 @@ import re
 import timeit
 import numpy as np
 
-from baby_cry_detection.pc_methods import Reader
+from baby_cry_detection.pc_methods import AudioReader
 from baby_cry_detection.pc_methods.feature_extractor import FeatureExtractor
 
 
@@ -33,7 +33,7 @@ def main():
                         filemode='w',
                         level=logging.INFO)
 
-    # READ FILES IN SUB-FOLDERS of load_path and FEATURE ENGINEERING
+    # Read all audio files in subfolders of load_path and extract features for each audio file
 
     # list load_path sub-folders
     regex = re.compile(r'^[0-9]')
@@ -50,17 +50,14 @@ def main():
 
     # iteration on sub-folders
     for directory in directory_list:
-
-        # Instantiate FeatureEngineer
-        feature_engineer = FeatureExtractor(label=directory)
-
+        feature_extractor = FeatureExtractor(label=directory)
         file_list = os.listdir(os.path.join(load_path, directory))
 
         # iteration on audio files in each sub-folder
         for audio_file in file_list:
-            file_reader = Reader(os.path.join(load_path, directory, audio_file))
+            file_reader = AudioReader(os.path.join(load_path, directory, audio_file))
             data, sample_rate = file_reader.read_audio_file()
-            avg_features, label = feature_engineer.extract_features(audio_data=data)
+            avg_features, label = feature_extractor.extract_features(audio_data=data)
 
             X = np.concatenate((X, avg_features), axis=0)
             y.append(label)

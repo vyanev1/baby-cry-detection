@@ -22,13 +22,13 @@ class Reader:
         Read audio file using librosa package. librosa allows resampling to desired sample rate and convertion to mono.
 
         :return:
-        * play_list: a list of audio_data as numpy.ndarray. There are 5 overlapping signals, each one is 5-second long.
+        * audio_data: a list of audio_data as numpy.ndarray. There are 5 overlapping signals, each one is 5-second long.
         """
 
-        play_list = list()
+        audio_data = list()
 
         for offset in range(5):
-            audio_data, _ = librosa.load(self.file_name, sr=44100, mono=True, offset=offset, duration=5.0)
-            play_list.append(audio_data)
+            audio_data_offset, _ = librosa.load(self.file_name, sr=44100, mono=True, offset=offset, duration=5.0)
+            audio_data.append(audio_data_offset)
 
-        return play_list
+        return audio_data

@@ -10,13 +10,12 @@ egg_path = '{}/../lib/baby_cry_detection-1.1-py2.7.egg'.format(os.path.dirname(o
 sys.path.append(egg_path)
 
 from baby_cry_detection.rpi_methods import Reader
-from baby_cry_detection.rpi_methods.baby_cry_predictor import BabyCryPredictor
+from baby_cry_detection.rpi_methods.baby_cry_predictor import CryingBabyPredictor
 from baby_cry_detection.rpi_methods.feature_extractor import FeatureExtractor
 from baby_cry_detection.rpi_methods.majority_voter import MajorityVoter
 
 
 def main():
-
     parser = argparse.ArgumentParser()
     parser.add_argument('--load_path_data',
                         default='{}/../recording/'.format(os.path.dirname(os.path.abspath(__file__))))
@@ -34,14 +33,14 @@ def main():
     # Read signal
     file_name = 'signal_9s.wav'       # only one file in the folder
     file_reader = Reader(os.path.join(load_path_data, file_name))
-    play_list = file_reader.read_audio_file()
+    audio_data = file_reader.read_audio_file()
 
     # Feature extraction
     feature_extractor = FeatureExtractor()
-    play_list_processed = list()
-    for signal in play_list:
-        tmp = feature_extractor.extract_features(signal)
-        play_list_processed.append(tmp)
+    audio_data_features = list()
+    for audio_signal_features in audio_data:
+        tmp = feature_extractor.extract_features(audio_signal_features)
+        audio_data_features.append(tmp)
 
     # Open Model
     # https://stackoverflow.com/questions/41146759/check-sklearn-version-before-loading-model-using-joblib
@@ -52,10 +51,10 @@ def main():
           model = pickle.load(fp)
 
     # Make Predictions
-    predictor = BabyCryPredictor(model)
+    predictor = CryingBabyPredictor(model)
     predictions = list()
-    for signal in play_list_processed:
-        tmp = predictor.classify(signal)
+    for audio_signal_features in audio_data_features:
+        tmp = predictor.classify(audio_signal_features)
         predictions.append(tmp)
 
     # Majority Vote
