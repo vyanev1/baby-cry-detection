@@ -10,7 +10,6 @@ import warnings
 from baby_cry_detection.rpi_methods import Reader
 from baby_cry_detection.rpi_methods.feature_extractor import FeatureExtractor
 from baby_cry_detection.rpi_methods.majority_voter import MajorityVoter
-
 from baby_cry_detection.rpi_methods.baby_cry_predictor import CryingBabyPredictor
 
 
@@ -41,8 +40,6 @@ def main():
                         filemode='w',
                         level=logging.INFO)
 
-    # READ RAW SIGNAL
-
     logging.info('Reading {0}'.format(file_name))
     start = timeit.default_timer()
 
@@ -54,25 +51,21 @@ def main():
     stop = timeit.default_timer()
     logging.info('Time taken for reading file: {0}'.format(stop - start))
 
-    # FEATURE ENGINEERING
-
-    logging.info('Starting feature engineering')
+    # Extract features
+    logging.info('Starting feature extraction...')
     start = timeit.default_timer()
 
-    # Feature extraction
     engineer = FeatureExtractor()
 
     play_list_processed = list()
-
     for signal in play_list:
         tmp = engineer.extract_features(signal)
         play_list_processed.append(tmp)
 
     stop = timeit.default_timer()
-    logging.info('Time taken for feature engineering: {0}'.format(stop - start))
+    logging.info('Time taken for feature extraction: {0}'.format(stop - start))
 
-    # MAKE PREDICTION
-
+    # Make prediction
     logging.info('Predicting...')
     start = timeit.default_timer()
 
@@ -86,24 +79,20 @@ def main():
     predictor = CryingBabyPredictor(model)
 
     predictions = list()
-
     for signal in play_list_processed:
         tmp = predictor.classify(signal)
         predictions.append(tmp)
 
-    # MAJORITY VOTE
-
+    # Majority vote
     majority_voter = MajorityVoter(predictions)
     majority_vote = majority_voter.vote()
 
     stop = timeit.default_timer()
     logging.info('Time taken for prediction: {0}. Is it a baby cry?? {1}'.format(stop - start, majority_vote))
 
-    # SAVE
-
+    # Save prediction result
     logging.info('Saving prediction...')
 
-    # Save prediction result
     with open(os.path.join(save_path, 'prediction.txt'), 'w') as text_file:
         text_file.write("{}".format(majority_vote))
 
