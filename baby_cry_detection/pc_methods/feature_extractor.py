@@ -23,14 +23,10 @@ class FeatureExtractor:
     RATE = 44100   # All recordings in ESC are 44.1 kHz
     FRAME = 512    # Frame size in samples
 
-    def __init__(self, label=None):
-        # Necessary to re-use code for training and prediction
-        if label is None:
-            self.label = ''
-        else:
-            self.label = label
+    def __init__(self, label=''):
+        self.label = label
 
-    def extract_features(self, audio_data):
+    def extract_features(self, audio_data: np.ndarray) -> tuple[np.ndarray, str]:
         """
         Extract features using librosa.feature.
 
@@ -66,17 +62,15 @@ class FeatureExtractor:
 
         return mean_feature, self.label
 
-    def compute_librosa_features(self, audio_data, feature_name):
+    def compute_librosa_features(self, audio_data, feature_name) -> np.ndarray:
         """
         Compute feature using librosa methods
 
         :param audio_data: signal
         :param feature_name: feature to compute 
             possible values: 'zero_crossing_rate', 'rmse', 'mfcc', 'spectral_centroid', 'spectral_rolloff', 'spectral_bandwidth'
-        :return: np array
+        :return: numpy array
         """
-        # # http://stackoverflow.com/questions/41896123/librosa-feature-tonnetz-ends-up-in-typeerror
-        # chroma_cens_feat = chroma_cens(y=audio_data, sr=self.RATE, hop_length=self.FRAME)
 
         logging.info('Computing {}...'.format(feature_name))
 
