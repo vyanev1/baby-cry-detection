@@ -3,8 +3,7 @@
 import numpy as np
 import logging
 import timeit
-from librosa.feature import zero_crossing_rate, mfcc, spectral_centroid, spectral_rolloff, spectral_bandwidth,\
-    rms #rms in librpsa 0.7.0, rmse in previous version
+from librosa.feature import zero_crossing_rate, mfcc, spectral_centroid, spectral_rolloff, spectral_bandwidth, rms
 
 __all__ = [
     'FeatureExtractor'
@@ -79,7 +78,7 @@ class FeatureExtractor:
         elif feature_name == self.RMSE:
             return rms(y=audio_data, hop_length=self.FRAME)
         elif feature_name == self.MFCC:
-            return mfcc(y=audio_data, sr=self.RATE, n_mfcc=13)
+            return mfcc(y=audio_data, sr=self.RATE, n_mfcc=20)
         elif feature_name == self.SPECTRAL_CENTROID:
             return spectral_centroid(y=audio_data, sr=self.RATE, hop_length=self.FRAME)
         elif feature_name == self.SPECTRAL_ROLLOFF:

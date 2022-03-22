@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
+import matplotlib.pyplot as plt
+from librosa.display import specshow
 from librosa.feature import zero_crossing_rate, mfcc, spectral_centroid, spectral_rolloff, spectral_bandwidth, rms
 
 
@@ -32,7 +34,7 @@ class FeatureExtractor:
         The numpy array is transformed into a data frame with named columns.
 
         :param audio_data: the input signal samples with frequency 44.1 kHz
-        :return: a numpy array (numOfFeatures x numOfShortTermWindows)
+        :return: a numpy array (numOfFeatures)
         """
 
         zcr_feature = self.compute_librosa_features(audio_data=audio_data, feature_name=self.ZERO_CROSSING_RATE)
@@ -41,6 +43,16 @@ class FeatureExtractor:
         spectral_centroid_feature = self.compute_librosa_features(audio_data=audio_data, feature_name=self.SPECTRAL_CENTROID)
         spectral_rolloff_feature = self.compute_librosa_features(audio_data=audio_data, feature_name=self.SPECTRAL_ROLLOFF)
         spectral_bandwidth_feature = self.compute_librosa_features(audio_data=audio_data, feature_name=self.SPECTRAL_BANDWIDTH)
+
+
+        # cepstrum = self.power_cepstrum(audio_data)
+        # indices = np.where(cepstrum > 0)
+        # _, ax = plt.subplots()
+        # ax.plot(np.arange(cepstrum.size)[indices], np.abs(cepstrum)[indices])
+        # ax.set_xlabel('Quefrency (samples)')
+        # ax.set_ylabel('Absolute value')
+        # ax.set_title('Power Cepstrum')
+        # plt.show()
 
         concat_feature = np.concatenate((zcr_feature,
                                       rmse_feature,
@@ -81,3 +93,28 @@ class FeatureExtractor:
         elif feature_name == self.SPECTRAL_BANDWIDTH:
             return spectral_bandwidth(y=audio_data, sr=self.RATE, hop_length=self.FRAME)
 
+    def power_cepstrum(self, audio_data: np.ndarray, n: int = None) -> np.ndarray:
+        r"""Compute the power cepstrum of a signal.
+        
+        Parameters
+        ----------
+        audio_data : ndarray [shape=(..., n)] or None
+            The audio time series
+        n : {None, int}, optional
+            Length of the Fourier transform.
+        
+        Returns
+        -------
+        ceps: ndarray
+            The power cepstrum.
+
+        References
+        ----------
+        [1] Wikipedia, "Cepstrum".
+            http://en.wikipedia.org/wiki/Cepstrum
+        """
+        X = np.fft.rfft(audio_data)
+        log_X = np.log(np.abs(X) ** 2)
+        cepstrum = np.abs(np.fft.irfft(log_X)) ** 2
+
+        return cepstrum

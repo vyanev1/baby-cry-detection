@@ -40,7 +40,7 @@ def main():
     directory_list = [i for i in os.listdir(load_path) if regex.search(i)]
 
     # initialize empty array for features
-    X = np.empty([1, 18])
+    X = np.empty([1, 25])
 
     # initialise empty array for labels
     y = []
@@ -62,7 +62,7 @@ def main():
             X = np.concatenate((X, avg_features), axis=0)
             y.append(label)
 
-    # X.shape is (401, 18) as I'm not using indexing. First line is made of zeros and is to be removed
+    # First line is made of zeros and is to be removed
     X = X[1:, :]
 
     stop = timeit.default_timer()
