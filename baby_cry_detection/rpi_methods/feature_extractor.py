@@ -2,8 +2,8 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from librosa.display import specshow
 from librosa.feature import zero_crossing_rate, mfcc, spectral_centroid, spectral_rolloff, spectral_bandwidth, rms
+from scipy.signal import butter, lfilter
 
 
 __all__ = [
@@ -44,15 +44,21 @@ class FeatureExtractor:
         spectral_rolloff_feature = self.compute_librosa_features(audio_data=audio_data, feature_name=self.SPECTRAL_ROLLOFF)
         spectral_bandwidth_feature = self.compute_librosa_features(audio_data=audio_data, feature_name=self.SPECTRAL_BANDWIDTH)
 
+        audio_data = self.butter_bandpass_filter(audio_data, lowcut=250, highcut=1000, fs=self.RATE)
 
-        # cepstrum = self.power_cepstrum(audio_data)
-        # indices = np.where(cepstrum > 0)
-        # _, ax = plt.subplots()
-        # ax.plot(np.arange(cepstrum.size)[indices], np.abs(cepstrum)[indices])
-        # ax.set_xlabel('Quefrency (samples)')
-        # ax.set_ylabel('Absolute value')
-        # ax.set_title('Power Cepstrum')
-        # plt.show()
+        quefrencies, cepstrum = self.compute_cepstrum(audio_data)
+        
+        lb = 1/1500 # highest frequency
+        ub = 1/70 # lowest frequency
+        indices = np.where((quefrencies > lb) & (quefrencies < ub))
+
+        _, ax = plt.subplots()
+        ax.plot(quefrencies[indices] * 1000, cepstrum[indices])
+        ax.set_xlabel('Quefrency (ms)', {'fontname':'Times New Roman'})
+        ax.set_ylabel('Absolute Magnitude', {'fontname':'Times New Roman'})
+        ax.set_title('Cepstrum: C(x(s))', {'fontname':'Times New Roman', 'fontweight':'bold'})
+        plt.tight_layout()
+        plt.show()
 
         concat_feature = np.concatenate((zcr_feature,
                                       rmse_feature,
@@ -85,7 +91,7 @@ class FeatureExtractor:
         elif feature_name == self.RMSE:
             return rms(y=audio_data, hop_length=self.FRAME)
         elif feature_name == self.MFCC:
-            return mfcc(y=audio_data, sr=self.RATE, n_mfcc=13)
+            return mfcc(y=audio_data, sr=self.RATE, n_mfcc=20)
         elif feature_name == self.SPECTRAL_CENTROID:
             return spectral_centroid(y=audio_data, sr=self.RATE, hop_length=self.FRAME)
         elif feature_name == self.SPECTRAL_ROLLOFF:
@@ -93,8 +99,8 @@ class FeatureExtractor:
         elif feature_name == self.SPECTRAL_BANDWIDTH:
             return spectral_bandwidth(y=audio_data, sr=self.RATE, hop_length=self.FRAME)
 
-    def power_cepstrum(self, audio_data: np.ndarray, n: int = None) -> np.ndarray:
-        r"""Compute the power cepstrum of a signal.
+    def compute_cepstrum(self, audio_data: np.ndarray, n: int = None) -> tuple[np.ndarray, np.ndarray]:
+        r"""Compute the real cepstrum of a signal.
         
         Parameters
         ----------
@@ -105,16 +111,25 @@ class FeatureExtractor:
         
         Returns
         -------
+        quefrencies: ndarray
+            The independent variable
         ceps: ndarray
-            The power cepstrum.
+            The real cepstrum.
 
         References
         ----------
         [1] Wikipedia, "Cepstrum".
             http://en.wikipedia.org/wiki/Cepstrum
         """
-        X = np.fft.rfft(audio_data)
-        log_X = np.log(np.abs(X) ** 2)
-        cepstrum = np.abs(np.fft.irfft(log_X)) ** 2
+        quefrencies = np.arange(audio_data.size) / self.RATE
+        ceps = np.abs(np.fft.ifft(np.log(np.abs(np.fft.fft(audio_data)))))
 
-        return cepstrum
+        return quefrencies, ceps
+
+    def butter_bandpass(self, lowcut, highcut, fs, order=5):
+        return butter(order, [lowcut, highcut], fs=fs, btype='band')
+
+    def butter_bandpass_filter(self, data, lowcut, highcut, fs, order=5):
+        b, a = self.butter_bandpass(lowcut, highcut, fs, order=order)
+        y = lfilter(b, a, data)
+        return y

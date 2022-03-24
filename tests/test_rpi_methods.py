@@ -45,7 +45,7 @@ class RpiMethodsTest(TestBabyCry):
                          (1, expected_computed_points))
 
         self.assertEqual(feature_engineer.compute_librosa_features(audio_data=self.pc_sample, feature_name='mfcc').shape,
-                         (13, expected_computed_points))
+                         (20, expected_computed_points))
 
         self.assertEqual(feature_engineer.compute_librosa_features(audio_data=self.pc_sample, feature_name='spectral_centroid').shape,
                          (1, expected_computed_points))
