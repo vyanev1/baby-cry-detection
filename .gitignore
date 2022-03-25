@@ -99,6 +99,5 @@ expand_train_set.py
 .vscode
 .vs
 
-# Output datasets
-*.npy
-performance.json
+# Outputs
+output

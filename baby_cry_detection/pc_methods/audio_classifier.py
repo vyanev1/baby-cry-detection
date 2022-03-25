@@ -24,18 +24,18 @@ class AudioClassifier:
         self.X = X
         self.y = y
 
-    def train(self):
+    def train(self, test_size = 0.25):
         """
         Train Random Forest
 
         :return: pipeline, best_param, best_estimator, perf
         """
 
-        logging.info('Splitting train and test set. Test set size: 25%')
+        logging.info('Splitting train and test set. Test set size: {0}%'.format(round(test_size*100)))
 
         # Split into training and test set
         X_train, X_test, y_train, y_test = train_test_split(self.X, self.y,
-                                                            test_size=0.25,
+                                                            test_size=test_size,
                                                             random_state=0,
                                                             stratify=self.y)
 
@@ -67,13 +67,13 @@ class AudioClassifier:
 
         y_predicted = model.predict(X_test)
 
-        performance = self._get_performance(y_test, y_predicted)
+        performance = self._get_performance_metrics(y_test, y_predicted)
 
         logging.info(performance)
 
         return performance, model.best_params_, model.best_estimator_
     
-    def _get_performance(self, y_test, y_predicted):
+    def _get_performance_metrics(self, y_test, y_predicted):
         return {
             'accuracy': accuracy_score(y_test, y_predicted),
             'recall': recall_score(y_test, y_predicted, average='macro'),
