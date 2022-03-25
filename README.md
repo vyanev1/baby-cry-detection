@@ -1,12 +1,11 @@
 # Baby cry detection - Building the model
 ### Recognition of baby cry from audio signals
 
-The aim is to automatically recognize a baby crying while sleeping. In such case, a lullaby is played to calm the baby
-down.
+The aim is to automatically recognize a baby crying while sleeping.
 
 This is done by implementing a machine learning algorithm on a Raspberry Pi. The idea is to train a model on a computer
 and to deploy it on Raspberry Pi, which is used to record a signal and use the model to predict if it is a baby cry or
-not. In the former case a lullaby is played, in the latter the process (recording and predicting steps) starts again.
+not.
 
 ### Code organisation
 
@@ -18,8 +17,9 @@ The code is organised as follows.
 
 ##### TRAINING
 
-It includes all the steps required to train a machine learning model. First, it reads the data, it performs feature
-engineering and it trains the model.
+It includes all the steps required to train a machine learning model. 
+
+First, it reads the data, it performs feature extraction and it trains the model.
 
 The model is saved to be used in the prediction step. The _training step_ is performed
 on a powerful machine, such as a personal computer.
@@ -28,12 +28,11 @@ Code to run this part is included in `pc_main` and `pc_methods`.
 
 ##### PREDICTION
 
-It includes all the steps needed to make a prediction on a new signal. It reads a new signal (9 second long), it cuts
+It includes all the steps needed to make a prediction on a new signal. It reads a new signal, it cuts
 it into 5 overlapping signals (5 second long), it applies the pipeline saved from the training step to make a
 prediction.
 
-The _prediction_ step is performed on a Raspberry Pi 2B. Please check
-[baby_cry_rpi](https://github.com/giulbia/baby_cry_rpi.git) for deployment on Raspberry Pi.
+The _prediction_ step is performed on a Raspberry Pi 2B.
 
 Code to run this part is included in `rpi_main` and `rpi_methods`.
 
@@ -41,7 +40,7 @@ Code to run this part is included in `rpi_main` and `rpi_methods`.
 
 There is a script to test the prediction step on your computer before deployment on Raspberry Pi.
 
-A script `prediction_simulation.py` and 2 audio signals are provided in folder `./baby_cry_detection/prediction_simulation`.
+A script `prediction_simulation.py` and 5 audio signals are provided in folder `./baby_cry_detection/prediction_simulation`.
 
 ### Run
 
@@ -76,7 +75,7 @@ Script `train_set.py` saves the trainset in folder _dataset_ and, script `train_
 
 ##### PREDICTION
 
-This step is to be executed on Raspberry Pi. Please refer to [baby_cry_rpi](https://github.com/giulbia/baby_cry_rpi.git)
+This step is to be executed on Raspberry Pi.
 
 ##### SIMULATION
 
@@ -91,7 +90,10 @@ python baby_cry_detection/prediction_simulation/prediction_simulation.py
 Log files are created for each step, they are saved in folder `baby_cry_detection`.
 
 
+### References
 
-
->Part of the data used for training comes from
+- Part of the data used for training comes from
 [ESC-50: Dataset for environmental sound classification](https://github.com/karoldvl/ESC-50)
+
+- Forked from
+[Baby Cry Detection](https://github.com/giulbia/baby_cry_detection)
