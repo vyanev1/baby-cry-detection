@@ -56,7 +56,7 @@ class FeatureExtractor:
         ax.plot(quefrencies[indices] * 1000, cepstrum[indices])
         ax.set_xlabel('Quefrency (ms)', {'fontname':'Times New Roman'})
         ax.set_ylabel('Absolute Magnitude', {'fontname':'Times New Roman'})
-        ax.set_title('Cepstrum: C(x(s))', {'fontname':'Times New Roman', 'fontweight':'bold'})
+        ax.set_title('Cepstrum: C(x(t))', {'fontname':'Times New Roman', 'fontweight':'bold'})
         plt.tight_layout()
         plt.show()
 

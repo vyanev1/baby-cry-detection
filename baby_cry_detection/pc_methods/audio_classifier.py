@@ -4,7 +4,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score
+from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score, classification_report
 import numpy as np
 import logging
 import timeit
@@ -67,14 +67,17 @@ class AudioClassifier:
 
         y_predicted = model.predict(X_test)
 
-        performance = {
-            'accuracy': accuracy_score(y_test, y_predicted),
-            'recall': recall_score(y_test, y_predicted, average='macro'),
-            'precision': precision_score(y_test, y_predicted, average='macro'),
-            'f1': f1_score(y_test, y_predicted, average='macro'),
-            # 'summary': classification_report(y_test, y_pred)
-        }
+        performance = self._get_performance(y_test, y_predicted)
 
         logging.info(performance)
 
         return performance, model.best_params_, model.best_estimator_
+    
+    def _get_performance(self, y_test, y_predicted):
+        return {
+            'accuracy': accuracy_score(y_test, y_predicted),
+            'recall': recall_score(y_test, y_predicted, average='macro'),
+            'precision': precision_score(y_test, y_predicted, average='macro'),
+            'f1': f1_score(y_test, y_predicted, average='macro'),
+            'summary': classification_report(y_test, y_predicted, labels=list(set(self.y)))
+        }

@@ -42,20 +42,18 @@ def main():
     audio_classifier = AudioClassifier(X, y)
     performance, parameters, best_estimator = audio_classifier.train()
 
-    # Save model performance
+    # Save model
     logging.info('Saving model...')
-
-    # Save performances
-    with open(os.path.join(save_path, 'performance.json'), 'w') as fp:
-        json.dump(performance, fp)
+    with open(os.path.join(save_path, 'model.pkl'), 'wb') as fp:
+        pickle.dump(best_estimator, fp)
 
     # Save parameters
     with open(os.path.join(save_path, 'parameters.json'), 'w') as fp:
         json.dump(parameters, fp)
 
-    # Save model
-    with open(os.path.join(save_path, 'model.pkl'), 'wb') as fp:
-        pickle.dump(best_estimator, fp)
+    # Save model performance
+    with open(os.path.join(save_path, 'performance.json'), 'w') as fp:
+        json.dump(performance, fp)
 
 if __name__ == '__main__':
     main()
