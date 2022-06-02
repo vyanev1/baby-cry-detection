@@ -3,9 +3,7 @@
 
 The aim is to automatically recognize a baby crying while sleeping.
 
-This is done by implementing a machine learning algorithm on a Raspberry Pi. The idea is to train a model on a computer
-and to deploy it on Raspberry Pi, which is used to record a signal and use the model to predict if it is a baby cry or
-not.
+This is done by implementing a Support Vector Machine (SVM) learning algorithm on a Raspberry Pi. The idea is to train a model on a computer and to deploy it on Raspberry Pi, which is used to record a signal and use the model to predict if it is a baby cry or not.
 
 ### Code organisation
 
